@@ -3,12 +3,9 @@ package org.apache.bookkeeper.proto.checksum.entity;
 import java.security.GeneralSecurityException;
 
 import org.apache.bookkeeper.proto.DataFormats.LedgerMetadataFormat.DigestType;
-import org.apache.bookkeeper.proto.checksum.DigestManager;
 import org.apache.bookkeeper.util.ByteBufList;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.buffer.UnpooledByteBufAllocator;
 
 public class DigestManagerEntity {
 	

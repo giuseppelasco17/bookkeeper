@@ -50,7 +50,7 @@ public class TestDigestManagerVerifyDigestLac {
 	private ByteBuf testBuf;
 
 	@Parameterized.Parameters
-	public static Collection BufferedChannelParameters() throws Exception {
+	public static Collection<Object[]> BufferedChannelParameters() throws Exception {
 		return Arrays.asList(new Object[][] {
 			
 			// Suite minimale

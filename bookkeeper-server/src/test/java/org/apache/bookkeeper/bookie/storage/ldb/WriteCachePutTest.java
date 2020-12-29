@@ -77,7 +77,7 @@ public class WriteCachePutTest {
             entry.writerIndex(entry.capacity());
             
             if (writeEntity.getSegmentSize() == 1024) {
-            	writeCache.put(3, 3, entry);
+            	writeCache.put(3, 3, entry);//mutation linea 145
             }
         }
         else {
