@@ -33,33 +33,15 @@ public class WriteCacheGetTest {
     @Before
     public void setUp() throws Exception {
         byteBufAllocator = UnpooledByteBufAllocator.DEFAULT;
-        /*cache formata da segmenti
-         * segmenti composti da più entry
-         * 
-         * piu entry = ledger
-         * piu ledgre = bokkie
-         * */
-        
-        /*se mettiamo 1024 come segment max, allora l'd del segmento che andiamo a considerare
-         * quando ricerchiamo una entry aumenta.*/
         writeCache = new WriteCache(byteBufAllocator, entrySize * entryNumber, 1024);
-
         entry = byteBufAllocator.buffer(entrySize);
-        //System.out.println(entry.maxCapacity());
         ByteBufUtil.writeAscii(entry, "test");
         entry.writerIndex(entry.capacity());
-
-        
-        //System.out.println(writeEntity.getEntryId()+", "+writeEntity.getLedgerId());
-        
         if(writeEntity.getLedgerId()>=0 && writeEntity.getEntryId()>=0) {
         	writeCache.put(2, 2, entry);
-
             writeCache.put(writeEntity.getLedgerId(), writeEntity.getEntryId(), entry);
         	this.expectedResults = entry;
-        	
         }
-
     }
 
     @After
@@ -69,25 +51,16 @@ public class WriteCacheGetTest {
         writeCache.close();
     }
 
-    //Parametri in input
     @Parameterized.Parameters
-    public static Collection<?> getParameters(){
+    public static Collection<Object[]> WriteCacheGetParameters(){
         return Arrays.asList(new Object[][] {
-        	//key1 >= 0
-        	//key1>=0, key1<0
-        	//key2>=0, key2<0
-        	
-        	//key1=-1, key1=0
-        	//key2=-1. key2=0
         	//suite minimale
             {new WriteTestEntity(0, 0), null}, //sovrascritto dal setup: ByteBuff immesso in cache
             {new WriteTestEntity(-1, -1), null},
             {new WriteTestEntity(1, 1), null},
             
-            //branch e line coverage
+            //coverage
             {new WriteTestEntity(0, -1), null},
-            //ridondante
-            //{new WriteTestEntity(-1, 0), null}
         });
     }
 
@@ -104,12 +77,8 @@ public class WriteCacheGetTest {
             result = writeCache.get(writeEntity.getLedgerId(), writeEntity.getEntryId());
         }
         catch(Exception e){
-            //e.printStackTrace();
             result = null;
         }
-        
-        //System.out.println(expectedResults +", "+result);
-        
         Assert.assertEquals(expectedResults, result);
 
     }

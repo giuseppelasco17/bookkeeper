@@ -26,7 +26,6 @@ import java.util.Collection;
 import org.apache.bookkeeper.client.BKException.BKDigestMatchException;
 import org.apache.bookkeeper.proto.DataFormats.LedgerMetadataFormat.DigestType;
 import org.apache.bookkeeper.proto.checksum.entity.DigestManagerEntity;
-import org.apache.bookkeeper.util.ByteBufList;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
 
 @RunWith(Parameterized.class)
@@ -50,7 +48,7 @@ public class TestDigestManagerVerifyDigestLac {
 	private ByteBuf testBuf;
 
 	@Parameterized.Parameters
-	public static Collection<Object[]> BufferedChannelParameters() throws Exception {
+	public static Collection<Object[]> DigestManagerVerifyDigestLacParameters() throws Exception {
 		return Arrays.asList(new Object[][] {
 			
 			// Suite minimale
@@ -61,9 +59,6 @@ public class TestDigestManagerVerifyDigestLac {
 			{new DigestManagerEntity(0, DigestType.HMAC,1, false), BKDigestMatchException.class},
 			{new DigestManagerEntity(1, DigestType.CRC32C, 1, true), BKDigestMatchException.class},
 			{new DigestManagerEntity(-1, DigestType.CRC32, 0, true), BKDigestMatchException.class},
-
-			// Mutazioni
-			//{new DigestManagerEntity(0, DigestType.HMAC,1, true), BKDigestMatchException.class},
 		});
 	}
 
@@ -91,7 +86,6 @@ public class TestDigestManagerVerifyDigestLac {
 		
 
 		try {
-			System.out.println("READEBLEASS: "+entity.getTestBufList().getBuffer(0));
 			Assert.assertEquals(expectedResult, digest.verifyDigestAndReturnLac(entity.getTestBufList().getBuffer(0)));
 		} catch (Exception e) {
 			Assert.assertEquals(expectedResult, e.getClass());

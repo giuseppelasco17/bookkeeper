@@ -42,14 +42,10 @@ public class TestDigestManagerVerifyDigestAndReturnData {
     		this.entity.setTestBuf(bb);
     		this.checked = true;
 		}
-    	
-		
-		//byte[] data = dataReceived.getBytes();
-		
-	}
+    }
 	
 	@Parameterized.Parameters
-	public static Collection<Object[]> BufferedChannelParameters() throws Exception {
+	public static Collection<Object[]> DigestManagerVerifyDigestAndReturnDataParameters() throws Exception {
 		return Arrays.asList(new Object[][] {
 			
 			// Suite minimale
@@ -58,10 +54,6 @@ public class TestDigestManagerVerifyDigestAndReturnData {
 			{new DigestManagerEntity(0, 0, DigestType.HMAC, DigestType.HMAC, 0, 0, false, 5, false), 0},
 			//mutation
 			{new DigestManagerEntity(1, 1, DigestType.CRC32C, DigestType.CRC32,1,1 ,false, 0, false), BKDigestMatchException.class},
-			/*l'unico modo per rendere Invalid l'oggeto ByteBufe è modificare il parametro "lenght". L'oggetto BytebUf, però, se riceve un lenght positivo
-			 * viene creato correttamente altrimenti genera un'eccezione al momento dell'istanziazione. Quindi, il parametro ByteBuf deve essere passato
-			 * già in maniera corretta alla funzione da testare. Questo ci permette di non considerare il caso di test in cui il parametro ByteBuf è
-			 * NON valido. */
 			});
 	}
 	
@@ -70,7 +62,7 @@ public class TestDigestManagerVerifyDigestAndReturnData {
 		if (expectedResult.equals(0)) {
 			generatesByteBuf(entity.getLength());
 			this.expectedResult = entity.getTestBuf();
-		}	//this.expectedResult = DigestManagerEntity.generateEntryMutationBranch(5);
+		}
 		else {
 			this.expectedResult = expectedResult;
 		}

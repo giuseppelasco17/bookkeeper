@@ -19,16 +19,12 @@
 
 package org.apache.bookkeeper.proto.checksum;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
 import org.apache.bookkeeper.proto.checksum.entity.DigestManagerEntity;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -53,22 +49,14 @@ public class TestDigestManagerGenerateMasterKey {
 	}
 
 	@Parameterized.Parameters
-	public static Collection BufferedChannelParameters() throws Exception {
+	public static Collection<Object[]> DigestManagerGenerateMasterKeyParameters() throws Exception {
 		generatesBytes();
-		System.out.println(Arrays.toString(b)+", "+ b.length);
-		
-		/*MUTATION COVERAGE:
-		 * 
-		 * - far funzionare il power ìmock al progetto
-		 * */
 		
 		return Arrays.asList(new Object[][] {
 			
 			// Suite minimale
 			{new DigestManagerEntity("".getBytes()), MacDigestManager.EMPTY_LEDGER_KEY},
 			{new DigestManagerEntity(b), MacDigestManager.genDigest("ledger", b)}
-			
-
 		});
 	}
 	
@@ -80,24 +68,11 @@ public class TestDigestManagerGenerateMasterKey {
 
 	@Test
 	public void testGenerateMasterKey() {
-		/*byte[] d = Mockito.spy(pass);
-		Mockito.when(d.length).thenReturn(1);*/
-
 		try {
 			Assert.assertArrayEquals((byte[]) expectedResult, DigestManager.generateMasterKey(pass));
 		} catch (Exception e) {
 		}
-		
 	}
-	
-	public static void main(String[] args) {
-		/*byte[] pass = "ciao".getBytes();
-		byte[] d = Mockito.spy(pass);
-		Mockito.when(d.length).thenReturn(1);
-		
-		System.out.println(d.length);*/
-	}
-
 }  
 
 

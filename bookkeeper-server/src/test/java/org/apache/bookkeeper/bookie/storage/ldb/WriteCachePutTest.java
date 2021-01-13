@@ -25,31 +25,18 @@ public class WriteCachePutTest {
     private boolean expectedResults;
 	private int expectedCount;
 
-
-    //Parametri in input
     @Parameterized.Parameters
-    public static Collection<?> getParameters(){
+    public static Collection<Object[]> WriteCachePutParameters(){
     final int entryNumber = 10;
     final int kilo = 1024;
     final int mega = 1 * 1024 * 1024;
     final int giga = 1 * 1024 * 1024 * 1024;
-    /*MUTATION COVERAGE:
-	 * 
-	 * -LINE 168: Mutation equivalent (strong mutation)
-	 * */
-    
-    /*
-     * ledgerId e entryId >= 0 
-     * cambiare 3 par con null */
         return Arrays.asList(new Object[][] {
         	//suite minimale
-        	
         		{new WriteTestEntity(1, 1, true, kilo * entryNumber, kilo, kilo, false), true, 2},
-                
         		{new WriteTestEntity(0, -1, false, kilo * entryNumber, kilo, giga, false), false, 0},
                 {new WriteTestEntity(-1, 0, true, kilo * entryNumber, kilo, giga, false), false, 0},
                 
-                //{new WriteTestEntity(1, -1, true, kilo * entryNumber, kilo, giga, false), false},
               //coverage aumentata al 97.8 da 95.6
                 {new WriteTestEntity(1, 2, true, kilo / entryNumber, kilo, giga, false), false, 0},
               //coverage aumentata al 99.1 da 97.8
@@ -114,7 +101,6 @@ public class WriteCachePutTest {
         }
 
         Assert.assertEquals(this.expectedResults, result);
-        System.out.println("count: "+writeCache.count());
         
         //for mutation line 178
         Assert.assertEquals(this.expectedCount, this.writeCache.count());

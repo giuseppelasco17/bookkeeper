@@ -31,10 +31,6 @@ public class TestDigestManagerVerifyDigest {
 	private DigestManager digestForSending;
 	private boolean checked = false;
 	
-	//private String dataReceived = "";
-	//private int lenghtDataReceived = dataReceived.length();
-	
-    
     public void generatesByteBuf(int lenght) {
     	//la seconda chiamata viene ignorata in quanto il buffer è già stato creato
     	if (!checked) {
@@ -47,27 +43,19 @@ public class TestDigestManagerVerifyDigest {
     		this.entity.setTestBuf(bb);
     		this.checked = true;
 		}
-    	
-		
-		//byte[] data = dataReceived.getBytes();
-		
 	}
     
    
 	
 	@Parameterized.Parameters
-	public static Collection<Object[]> BufferedChannelParameters() throws Exception {
+	public static Collection<Object[]> DigestManagerVerifyDigestParameters() throws Exception {
 		return Arrays.asList(new Object[][] {
 			
 			// Suite minimale
 			{new DigestManagerEntity(0, -1, DigestType.HMAC, DigestType.HMAC, 0, -1, false, 12, true), NullPointerException.class},
 			{new DigestManagerEntity(0, 1, DigestType.HMAC, DigestType.HMAC, 0, 1, false, 12, false), 0},
 			{new DigestManagerEntity(0, 0, DigestType.HMAC, DigestType.HMAC, 0, 0, false, 12, false), 0},
-			/*l'unico modo per rendere Invalid l'oggeto ByteBufe è modificare il parametro "lenght". L'oggetto BytebUf, però, se riceve un lenght positivo
-			 * viene creato correttamente altrimenti genera un'eccezione al momento dell'istanziazione. Quindi, il parametro ByteBuf deve essere passato
-			 * già in maniera corretta alla funzione da testare. Questo ci permette di non considerare il caso di test in cui il parametro ByteBuf è
-			 * NON valido. */
-			
+
 			// Coverage
 			{new DigestManagerEntity(0, 1, DigestType.HMAC, DigestType.HMAC, 0, 0, false, 12, false), BKDigestMatchException.class},//entry
 			{new DigestManagerEntity(1, 1, DigestType.DUMMY, DigestType.DUMMY, -1, 1, false, 12, false), BKDigestMatchException.class},//ledger
@@ -76,15 +64,7 @@ public class TestDigestManagerVerifyDigest {
 			
 			//mutation
 			{new DigestManagerEntity(1, 1, DigestType.CRC32C, DigestType.CRC32,1,1 ,false, 0, false), BKDigestMatchException.class},
-			{new DigestManagerEntity(0, 1, DigestType.HMAC, DigestType.HMAC, 0, 1, false, 0, false), 0},
-
-			
-			//{new DigestManagerEntity(1, 1, DigestType.HMAC, DigestType.CRC32C, 1,1, false, 5, false), BKDigestMatchException.class},
-			//{new DigestManagerEntity(1, 1, DigestType.CRC32,DigestType.CRC32, 1,1, false, 5, false), 0},
-			//{new DigestManagerEntity(1, 1, DigestType.CRC32, DigestType.CRC32,1,0, false, 5, false), BKDigestMatchException.class},
-			// Coverage
-			
-			
+			{new DigestManagerEntity(0, 1, DigestType.HMAC, DigestType.HMAC, 0, 1, false, 0, false), 0},		
 		});
 	}
 
@@ -103,18 +83,13 @@ public class TestDigestManagerVerifyDigest {
 	public void beforeTest() throws GeneralSecurityException {
 		this.digestManager = DigestManager.instantiate(entity.getLedgerIdToTest(), 
 				"testPassword".getBytes(), entity.getDigestTypeToTest(), UnpooledByteBufAllocator.DEFAULT, false);
-
 		this.digestForSending = DigestManager.instantiate(entity.getLedgerID(), 
 				"testPassword".getBytes(), entity.getDigestType(), UnpooledByteBufAllocator.DEFAULT, false);
-
 		generatesByteBuf(entity.getLength());
 		ByteBuf bb = this.entity.getTestBuf();
-		
-		//return bb;
 		if (entity.isBadByteBufList()) {
-			/*creo un header dopve non scrivo nulla dentro, quindi i byte leggibili sono 0*/
+			/*header  byte leggibili 0*/
 		    ByteBuf badHeader = Unpooled.buffer(DigestManager.METADATA_LENGTH);
-		    //badHeader.writeBytes(MUTATION_BYTE_BUF);
 		    entity.setTestBufList(ByteBufList.get(badHeader, bb));
 		    return;
 		}
@@ -122,7 +97,6 @@ public class TestDigestManagerVerifyDigest {
 			entity.setTestBufList(null);
 			return;
 		}
-		//old lenght=5
 		ByteBufList byteBufList = digestForSending.computeDigestAndPackageForSending(entity.getEntryId(), 
 				0, this.entity.getTestBuf().readableBytes(), bb);
 		this.entity.setTestBufList(byteBufList);
